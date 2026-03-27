@@ -92,14 +92,58 @@ function drawBricks() {
 
 // Draw everything
 function draw() {
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   drawBall();
   drawPaddle();
   drawScore();
   drawBricks();
 }
 
-draw();
+function movePaddle() {
+  paddle.x += paddle.dx;
 
+  // Wall detection
+  if (paddle.x + paddle.w > canvas.width) paddle.x = canvas.width - paddle.w;
+  if (paddle.x < 0) paddle.x = 0;
+}
+
+// Update canvas drawing and animation
+function update() {
+  movePaddle();
+  draw();
+  window.requestAnimationFrame(update);
+}
+
+update();
+
+// Key down event
+function keyDown(e) {
+  if (e.key === "ArrowRight" || e.key === "Right") {
+    paddle.dx = paddle.speed;
+  }
+  if (e.key === "ArrowLeft" || e.key === "Left") {
+    paddle.dx = -paddle.speed;
+  }
+}
+
+// Key up event
+function keyUp(e) {
+  if (
+    e.key === "ArrowRight" ||
+    e.key === "Right" ||
+    e.key === "ArrowLeft" ||
+    e.key === "Left"
+  )
+    paddle.dx = 0;
+}
+
+// Keyboard event handlers
+document.addEventListener("keydown", keyDown);
+document.addEventListener("keyup", keyUp);
+
+// Show and hide rules event handlers
 rulesBtn.addEventListener("click", () => {
   rules.classList.add("show");
 });
